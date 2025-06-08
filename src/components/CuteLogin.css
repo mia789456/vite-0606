@@ -1,0 +1,71 @@
+.cute-login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 48px;
+}
+
+.cute-man {
+  margin-bottom: 16px;
+  transition: all 0.3s;
+}
+
+/* 默认睁眼 */
+.eyes-open { display: block; }
+.eyes-closed { display: none; }
+
+/* 捂眼状态 */
+#cute-man.cover .eyes-open { display: none; }
+#cute-man.cover .eyes-closed { display: block; }
+
+/* 手臂动画 */
+.hand {
+  transition: transform 0.4s cubic-bezier(.4,2,.6,1);
+}
+.hand-left {
+  transform: rotate(-20deg) translateY(0);
+  transform-origin: 18px 80px;
+}
+.hand-right {
+  transform: rotate(20deg) translateY(0);
+  transform-origin: 102px 80px;
+}
+#cute-man.cover .hand-left {
+  transform: rotate(-60deg) translate(30px, -40px);
+}
+#cute-man.cover .hand-right {
+  transform: rotate(60deg) translate(-30px, -40px);
+}
+
+/* 登录表单样式 */
+.cute-login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 220px;
+}
+.cute-login-form input {
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  outline: none;
+  transition: border 0.2s;
+}
+.cute-login-form input:focus {
+  border: 1.5px solid #ff9800;
+}
+.cute-login-form button {
+  padding: 8px 0;
+  background: #ff9800;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.2s;
+}
+.cute-login-form button:hover {
+  background: #ffa726;
+} 

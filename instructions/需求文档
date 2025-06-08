@@ -1,0 +1,320 @@
+前端需求文档：指标平台 (Metrics Platform)
+
+
+目标： 构建一个用户友好的前端界面，允许用户注册、查看和管理他们的指标，并提供基本的报表功能。
+
+技术栈：
+
+构建工具: Vite
+
+框架: React
+
+UI 组件库: Ant Design (antd)
+样式：tailwindcss
+
+状态管理建议: Redux Toolkit
+
+路由: React Router DOM
+
+图表库: ECharts
+
+请求库：axios
+
+受众： 本文档旨在指导前端开发人员（包括使用 Cursor 进行辅助开发）理解并实现指标平台的前端功能。
+
+一、概述与核心功能
+指标平台旨在提供一个集中化的界面，使用户能够：
+
+注册/管理指标: 录入和编辑他们的业务指标。
+
+查看指标详情: 深入分析特定指标，包括维度过滤和时间趋势图。
+
+报表集成: 将指标添加到自定义报表中，以便于后续分析和共享。
+
+二、用户角色与权限 (前端视角)
+普通用户 (User):
+
+注册新指标
+
+查看和编辑自己注册的指标
+
+在指标详情页查看指标数据
+
+将指标添加到现有报表或新建报表
+
+三、模块与页面详情
+1. 认证模块 (Authentication)
+登录页面 (/login):
+
+组件: 使用 Ant Design 的 Form、Input (用户名/邮箱、密码)、Button。
+
+功能: 用户输入凭证登录。成功登录后重定向到首页 (/metrics)。
+
+校验: 前端基本校验（非空，邮箱格式等）。
+
+API 集成: 调用后端登录 API。
+
+注册页面 (/register):
+
+组件: 使用 Ant Design 的 Form、Input (用户名、邮箱、密码、确认密码)、Button。
+
+功能: 用户注册新账户。成功注册后重定向到登录页或直接登录。
+
+校验: 前端基本校验（非空，密码强度，两次密码一致等）。
+
+API 集成: 调用后端注册 API。
+
+2. 首页 / 指标列表 (Metrics List Page)
+URL: /metrics
+
+布局: 包含导航栏、侧边栏（可选，用于报表列表）和主内容区域。
+
+核心组件:
+
+搜索框: Ant Design 的 Input.Search，允许用户通过指标名称或描述进行搜索。用户输入关键字并触发搜索后，指标列表应实时更新以显示匹配的结果。
+
+添加指标按钮: Ant Design 的 Button，点击跳转到“注册新指标”页面。
+
+指标列表: Ant Design 的 Table 组件。
+
+显示字段: 指标名称 (Metric Name), 描述 (Description), 创建人 (Creator), 创建时间 (Creation Time), 操作 (Actions)。
+
+操作列:
+
+查看详情: Button 或 Link，点击跳转到指标详情页 (/metrics/:id)。
+
+编辑: Button，点击跳转到“编辑指标”页面 (/metrics/:id/edit)。
+
+删除: Button，带确认弹窗 (Popconfirm)，调用后端 API 删除指标。
+
+添加到报表: Button，点击弹出“选择报表”或“新建报表”的 Modal。
+
+分页: Ant Design 的 Pagination 组件。
+
+数据源: 调用后端 API 获取指标列表，并支持传入搜索关键字作为参数。
+
+空状态: 当没有指标时，显示 Ant Design 的 Empty 组件。
+
+3. 注册 / 编辑指标 (Register/Edit Metric Page)
+URL:
+
+注册: /metrics/new
+
+编辑: /metrics/:id/edit
+
+核心组件: Ant Design 的 Form 组件。
+
+表单项:
+
+指标名称 (Metric Name): Input (必填)
+
+指标描述 (Metric Description): Input.TextArea (可选)
+
+数据源配置 (Data Source Configuration):
+
+目前简化为文本输入，用户填写 API endpoint 或数据查询语句（例如：Input.TextArea）。
+
+思考点（未来扩展）： 实际可能需要更复杂的表单（下拉选择数据源类型，填写连接参数等），但当前阶段可以保持简单。
+
+维度定义 (Dimension Definitions):
+
+列表形式，每个维度包含：维度名称 (Dimension Name - Input), 维度类型 (Dimension Type - Text/Number/Date 等，Select 组件)。
+
+允许添加/删除维度。
+
+单位 (Unit): Input (可选，例如：%、元、次)
+
+默认聚合方式 (Default Aggregation): Select (例如：Sum, Average, Count, Max, Min)
+
+其他元数据: （待定，可根据后端模型决定）
+
+按钮: Button (提交/保存), Button (取消)。
+
+数据源:
+
+注册时，提交表单数据到后端 API。
+
+编辑时，先根据 :id 从后端获取现有指标数据填充表单，然后提交修改。
+
+校验: 前端表单校验。
+
+提示: 成功/失败后使用 Ant Design 的 Message 或 Notification 组件提示用户。
+
+4. 指标详情页 (Metric Detail Page)
+URL: /metrics/:id
+
+核心组件:
+
+指标名称与描述: Ant Design 的 Typography.Title, Typography.Text。
+
+维度过滤器 (Dimension Filters):
+
+组件: 根据指标的维度定义动态生成 Ant Design 的 Form.Item / Select / RangePicker (日期范围) / Input.Search (文本维度) 组合。
+
+功能: 用户选择维度值后，触发图表数据更新。
+
+日期范围选择器: RangePicker (Ant Design)，用于选择数据的时间范围。
+
+应用/重置按钮: Button。
+
+折线图 (Line Chart):
+
+图表库: 待定（例如 ECharts/Recharts）。
+
+数据展示: 显示指标值随时间变化的趋势。
+
+X 轴: 时间轴。
+
+Y 轴: 指标值。
+
+多维度支持: 如果用户选择了多个维度值，图表可以展示多条折线（例如，不同区域的销售额）。
+
+Loading 状态: 数据加载时显示 Ant Design 的 Spin 组件。
+
+空数据状态: 没有数据时显示 Ant Design 的 Empty 组件。
+
+报表建议功能 (Reporting Suggestion):
+
+按钮: “添加到报表” Button。
+
+Modal/Drawer: 点击按钮后弹出，允许用户：
+
+从现有报表中选择一个进行添加。
+
+输入名称新建一个报表并添加。
+
+API 集成: 调用后端 API 将指标与报表关联。
+
+5. 报表模块 (Reporting - 简化版)
+URL: /reports (或集成在侧边栏)
+
+核心组件:
+
+报表列表: Ant Design 的 Table 组件，显示报表名称、创建时间、包含的指标数量等。
+
+操作列:
+
+查看报表: Button 或 Link，跳转到报表详情页 (/reports/:id)。
+
+删除报表: Button。
+
+报表详情页 (/reports/:id):
+
+报表名称: Typography.Title。
+
+包含的指标列表: Table 或 List 组件，显示报表中的每个指标。
+
+操作: 可选地提供“移除指标”功能。
+
+图表组合: （未来扩展，当前阶段不强制要求） 如果需要，可以考虑在这里将报表中的多个指标以图表形式组合展示。当前阶段，主要是列出报表中的指标。
+
+四、技术细节与考虑
+路由管理: 使用 React Router DOM 进行前端路由。
+
+状态管理:
+
+全局状态：用户认证信息、公共配置等。
+
+页面级状态：表单数据、过滤条件等。
+
+数据获取和缓存：推荐使用 React Query 或 SWR 来管理后端 API 的数据请求、缓存、更新和错误处理，极大地简化数据流管理。
+
+API 集成:
+
+使用axios 进行后端 API 请求。
+
+统一的 API 请求工具函数，处理 token 认证、错误处理和加载状态。
+
+UI 组件: 充分利用 Ant Design 的组件库，保持界面一致性和开发效率。
+
+组件化: 将页面拆分为独立的、可复用的组件，提高代码可维护性。
+
+错误处理与用户反馈:
+
+表单校验错误提示。
+
+API 请求失败时的 Message / Notification 提示。
+
+加载状态 (Spin)。
+
+空数据状态 (Empty)。
+
+响应式设计: 考虑在不同屏幕尺寸下的布局和显示效果。Ant Design 提供了良好的响应式能力，但需要确保布局在手机、平板和桌面设备上都表现良好。
+
+代码风格与规范: 遵循 React 最佳实践和 Ant Design 的推荐用法。
+
+五、后端 API 接口 (示例，需与后端团队确认，但是你可以直接mock数据然后进行前端开发)
+POST /api/auth/login - 用户登录
+
+POST /api/auth/register - 用户注册
+
+GET /api/metrics - 获取指标列表（支持分页、搜索）
+
+请求参数示例: ?page=1&pageSize=10&search=<keywords>
+
+GET /api/metrics/:id - 获取单个指标详情
+
+POST /api/metrics - 创建新指标
+
+PUT /api/metrics/:id - 更新指标
+
+DELETE /api/metrics/:id - 删除指标
+
+GET /api/metrics/:id/data - 获取指标数据（支持维度过滤、时间范围）
+
+请求参数示例: ?startDate=2023-01-01&endDate=2023-01-31&dimension1=value1&dimension2=value2
+
+GET /api/reports - 获取报表列表
+
+POST /api/reports - 创建新报表
+
+POST /api/reports/:id/add-metric - 将指标添加到报表
+
+六、开发流程建议 (与 Cursor 协作)
+初始化项目: 使用 Vite 创建 React 项目。
+
+集成 Ant Design: 配置 Ant Design 按需加载、主题等。
+
+搭建路由: 使用 React Router DOM 搭建基本路由结构。
+
+认证模块优先: 完成登录和注册页面，确保前后端认证流程畅通。
+
+指标列表与管理:
+
+实现指标列表页的数据获取和展示。
+
+实现指标搜索功能，更新列表数据。
+
+实现创建和编辑指标的表单逻辑及 API 调用。
+
+实现删除指标功能。
+
+指标详情页:
+
+实现动态维度过滤器。
+
+集成图表库，实现折线图的数据展示和更新。
+
+实现“添加到报表”的 Modal 逻辑。
+
+报表模块:
+
+实现报表列表和基本报表详情页。
+
+对 Cursor 的期望：
+
+代码生成: 辅助生成组件结构、Ant Design 组件用法、表单逻辑、API 请求函数等。
+
+代码优化: 提供性能优化建议、代码重构方案。
+
+错误排查: 帮助识别并修复 Bug。
+
+技术选型建议: 在图表库、状态管理库等未定项上提供专业建议。
+
+最佳实践: 提醒遵循 React 和 Ant Design 的最佳实践。
+
+修订历史：
+
+[2025-06-07] 初稿
+
+[2025-06-07] 更新：添加指标搜索功能要求
