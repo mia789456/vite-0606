@@ -18,6 +18,7 @@ import './styles/globals.css'
 import CuteLogin from './components/CuteLogin'
 import ReportEditPage from './pages/reports/ReportEditPage'
 import ContextDemo from './pages/ContextDemo'
+import SqlEditorDemo from './pages/SqlEditorDemo'
 
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -138,6 +139,8 @@ function App() {
             <Route path="/demo" element={<ContextDemo />}>
             </Route>
             
+            <Route path="/sql-editor" element={<SqlEditorDemo />} />
+            
             {/* 404页面 */}
             <Route path="*" element={<Navigate to="/metrics" replace />} />
           </Routes>
@@ -158,6 +161,6 @@ const App3 = () => (
   </StateProvider>
 );
 
-export default App3
+export default App
 
 
