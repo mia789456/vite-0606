@@ -78,7 +78,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     iconPosition = 'left', 
     loading = false,
     disabled,
-    children, 
+  children,
     ...props 
   }, ref) => {
     // If href is provided, use fake-btn classes for link styling
@@ -130,15 +130,15 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       )
     }
 
-    return (
-      <button
+  return (
+    <button
         className={cn(baseClasses)}
         ref={ref}
         disabled={isDisabled}
         {...props}
-      >
+    >
         {content}
-      </button>
+    </button>
     )
   }
 )
