@@ -19,6 +19,7 @@ import CuteLogin from './components/CuteLogin'
 import ReportEditPage from './pages/reports/ReportEditPage'
 import ContextDemo from './pages/ContextDemo'
 import SqlEditorDemo from './pages/SqlEditorDemo'
+import SqlFormatterTest from './pages/SqlFormatterTest'
 
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -140,6 +141,7 @@ function App() {
             </Route>
             
             <Route path="/sql-editor" element={<SqlEditorDemo />} />
+            <Route path="/sql-formatter-test" element={<SqlFormatterTest />} />
             
             {/* 404页面 */}
             <Route path="*" element={<Navigate to="/metrics" replace />} />

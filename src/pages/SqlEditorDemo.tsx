@@ -7,21 +7,7 @@ const SqlEditorDemo: React.FC = () => {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [viewModalVisible, setViewModalVisible] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [sqlCode, setSqlCode] = useState(`SELECT 
-    u.id,
-    u.username,
-    u.email,
-    COUNT(o.id) as order_count,
-    MAX(o.created_at) as last_order_date,
-    SUM(o.total_amount) as total_spent
-FROM users u
-LEFT JOIN orders o ON u.id = o.user_id
-WHERE u.status = 'active'
-    AND u.created_at >= '2024-01-01'
-GROUP BY u.id, u.username, u.email
-HAVING COUNT(o.id) > 0
-ORDER BY total_spent DESC, last_order_date DESC
-LIMIT 100;`);
+  const [sqlCode, setSqlCode] = useState(`select u.id,u.username,u.email,count(o.id) as order_count,max(o.created_at) as last_order_date,sum(o.total_amount) as total_spent from users u left join orders o on u.id = o.user_id where u.status = 'active' and u.created_at >= '2024-01-01' group by u.id, u.username, u.email having count(o.id) > 0 order by total_spent desc, last_order_date desc limit 100;`);
 
   // 模拟保存操作
   const handleSave = async (value: string) => {
@@ -99,7 +85,8 @@ LIMIT 100;`);
 
       <Card title="高级编辑器演示" className="mb-6">
         <p className="mb-4 text-gray-600">
-          高级编辑器支持主题切换、全屏编辑、文件下载等更多功能：
+          高级编辑器支持主题切换、全屏编辑、文件下载等更多功能。
+          <strong>尝试点击工具栏中的格式化按钮来格式化 SQL 代码！</strong>
         </p>
         <div style={{ height: '300px' }}>
           <AdvancedSqlEditor
@@ -142,10 +129,11 @@ LIMIT 100;`);
           <div>
             <h4 className="font-semibold mb-2">高级功能特性：</h4>
             <ul className="text-sm text-gray-600 space-y-1">
+              <li>• <strong>自定义 SQL 格式化</strong>（一键格式化）</li>
               <li>• 主题切换（亮色/暗色）</li>
               <li>• 全屏编辑模式</li>
               <li>• SQL 文件下载</li>
-              <li>• 快捷键支持</li>
+              <li>• 快捷键支持（Ctrl+S 保存，Ctrl+Shift+F 格式化）</li>
               <li>• 工具栏控制</li>
             </ul>
           </div>

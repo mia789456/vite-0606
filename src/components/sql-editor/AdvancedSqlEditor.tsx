@@ -11,6 +11,7 @@ import {
 import type { editor } from 'monaco-editor';
 import { useMonaco } from '../../hooks/useMonaco';
 import monaco from '../../monacoLoader';
+import { formatSqlBasic } from '../../utils/sqlFormatter';
 
 interface AdvancedSqlEditorProps {
   value?: string;
@@ -90,7 +91,14 @@ const AdvancedSqlEditor: React.FC<AdvancedSqlEditorProps> = ({
 
   const handleFormat = () => {
     if (editorRef.current && !readOnly) {
-      editorRef.current.getAction('editor.action.formatDocument')?.run();
+      const currentValue = editorRef.current.getValue();
+      const formattedValue = formatSqlBasic(currentValue);
+      editorRef.current.setValue(formattedValue);
+      
+      // 触发 onChange 事件
+      if (onChange) {
+        onChange(formattedValue);
+      }
     }
   };
 
